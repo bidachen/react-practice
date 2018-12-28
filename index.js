@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 
 
-let temp={first:"jie",last:"lan",activity:"null",restrictions:[1,2,3]};
+let temp={first:"jie",last:"lan",activity:"Science Lab",checkValue:[false,false,false]};
 
 class GetInput extends React.Component{
     constructor(props){
@@ -21,6 +21,7 @@ class GetInput extends React.Component{
         </div>
     }
 }
+
 
 class GetSelection extends React.Component{
     constructor(props){
@@ -49,6 +50,7 @@ class CheckBox extends React.Component{
     }
     handleChange(event) {
         this.setState({ checked: event.target.checked })
+        temp.checkValue[this.props.index] =!temp.checkValue[this.props.index]
     }
     render(){
         return <div>
@@ -57,12 +59,16 @@ class CheckBox extends React.Component{
     }
 }
 
-function ResultTable(props){
+
+function ResultTable(props) {
     return <tr>
         <th>{props.first}</th>
         <th>{props.last}</th>
         <th>{props.activity}</th>
-        <th>{props.restrictions}</th>
+        {props.checkValue[0]?<th>"Dietary Restrictions"</th> : <th></th>}
+        {props.checkValue[1]?<th>"Physical Disabilities"</th> : <th></th>}
+        {props.checkValue[2]?<th>"Medical Needs""</th> : <th></th>}
+
     </tr>
 }
 
@@ -71,6 +77,7 @@ class App extends React.Component{
         super(props)
         this.state={
             list:[],
+            checkValue:["a) Dietary Restrictions", "b) Physical Disabilities","c) Medical Needs" ]
 
         }
         this.addCourse=this.addCourse.bind(this)
@@ -78,12 +85,23 @@ class App extends React.Component{
         this.handleChange = this.handleChange(this)
     }
     addCourse(event){
-        // let newItem = {id:this.state.list.id+1}
-        // let newState=this.state.list.push()
-        // this.setState()
-        this.setState({ list: [...this.state.list, temp] })
+
+        this.setState(prevState => ({
+            list: [...prevState.list, this.clone(temp)]
+        }))
+
     }
 
+    clone (obj){
+        if(obj == null || typeof(obj) != 'object')
+            return obj;
+
+        var temp = new obj.constructor();
+        for(var key in obj)
+            temp[key] = (obj[key]);
+
+        return temp;
+    }
     handleChange(event) {
 
     }
@@ -93,7 +111,7 @@ class App extends React.Component{
     }
     render(){
         let resultTable=this.state.list.map((item,index) => {
-            return <ResultTable id={index} first={item.first} last={item.last} activity={item.activity} restrictions={item.restrictions} />
+            return <ResultTable id={index} first={item.first} last={item.last} activity={item.activity}  checkValue= {item.checkValue}/>
         });
         return <div>
             <GetInput string={"First"} id ="first" change ={this.handleChange}/>
@@ -101,155 +119,22 @@ class App extends React.Component{
 
             <GetSelection id ="activity"/>
 
-            <CheckBox string={"a) Dietary Restrictions"}/>
-            <CheckBox string={"b) Physical Disabilities"} />
-            <CheckBox string={"c) Medical Needs"} />
+            {this.state.checkValue.map((value,index) => (
+                <div><CheckBox string={value} index={index} /></div>
+            ))}
+
 
             <button onClick={this.addCourse}>submit</button>
             <table>
                 {resultTable}
             </table>
         </div>
+
     }
 }
 
-// class App extends React.Component {
-//     constructor() {
-//         super();
-//         this.handleSubmit = this.handleSubmit.bind(this);
-//     }
-//
-//     handleSubmit(event) {
-//         event.preventDefault();
-//         const data = new FormData(event.target);
-//         console.log(data)
-//         // fetch('/api/form-submit-url', {
-//         //     method: 'POST',
-//         //     body: data,
-//         // });
-//     }
-//
-//     render() {
-//         return (
-//             <form onSubmit={this.handleSubmit}>
-//                 <label htmlFor="username">Enter username</label>
-//                 <input id="username" name="username" type="text" />
-//
-//                 <label htmlFor="email">Enter your email</label>
-//                 <input id="email" name="email" type="email" />
-//
-//                 <label htmlFor="birthdate">Enter your birth date</label>
-//                 <input id="birthdate" name="birthdate" type="text" />
-//
-//                 <button>Send data!</button>
-//             </form>
-//         );
-//     }
-// }
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
-        
-        
-        
-        
-        class GetInput extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { value: '' }
-    this.handleChange = this.handleChange.bind(this)
-  }
-  handleChange(event) {
-    this.setState({ value: event.target.value })
-  }
-  render() {
-    return <input name={this.props.string} type="text" value={this.state.value} onChange={this.handleChange} />
 
-  }
-}
-
-class GetSelection extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { value: 'Science Lab' }
-    this.handleChange = this.handleChange.bind(this)
-  }
-  handleChange(event) {
-    this.setState({ value: event.target.value })
-  }
-  render() {
-    return <select name="selection" value={this.state.value} onChange={this.handleChange}>
-      <option>Science Lab</option>
-      <option>Swimming</option>
-      <option>Cooking</option>
-      <option>Painting</option>
-    </select>
-  }
-}
-
-class CheckBox extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { checked: false }
-    this.handleChange = this.handleChange.bind(this)
-  }
-  handleChange(event) {
-    this.setState({ checked: event.target.checked })
-  }
-  render() {
-    return <input name={this.props.name} type="checkbox" checked={this.state.checked} onChange={this.handleChange} />
-  }
-}
-
-function ResultTable(props) {
-  return <tr>
-    <th>{props.first}</th>
-    <th>{props.last}</th>
-    <th>{props.activity}</th>
-    <th>{props.restrictions}</th>
-  </tr>
-}
-
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { list: [{ id: 0 }] }
-    this.addCourse = this.addCourse.bind(this)
-    this.delCourse = this.delCourse.bind(this)
-  }
-  addCourse(event) {
-    alert(1)
-  }
-  delCourse(event) {
-
-  }
-  render() {
-    let resultTable = this.state.list.map((item, index) => {
-      return <ResultTable id={item.id} first={item.first} last={item.last} activity={item.activity} restrictions={item.restrictions} />
-    });
-    return <form onSubmit={this.addCourse} id="newform">
-      <label>First name: <br />
-        <GetInput string={"First"} /><br />
-      </label>
-      <label>
-        Last name: <br></br>
-        <GetInput string={"Last"} /><br />
-      </label>
-      <GetSelection /><br />
-      <label>
-        <CheckBox name={'a'} />
-        a) Dietary Restrictions<br/>
-      </label>
-      <label>
-        <CheckBox name={'b'} />
-        b) Physical Disabilities<br/>
-      </label>
-      <label>
-        <CheckBox name={'c'} />
-        c) Medical Needs<br/>
-      </label>
-      <input type='submit' value='submit' />
-    </form>
-  }
-}
 
