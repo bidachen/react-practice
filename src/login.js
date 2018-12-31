@@ -16,7 +16,15 @@ function ResultTable(props) {
   return (
     <ListGroup>
       <ListGroupItem>
-        {props.first} {props.last} {props.activity} {props.restrictions}
+        {props.index} {props.first} {props.last} {props.activity}{" "}
+        {props.restrictions}
+        <button
+          onClick={() => {
+            return props.delCourse(props.id);
+          }}
+        >
+          X
+        </button>
       </ListGroupItem>
     </ListGroup>
   );
@@ -67,6 +75,7 @@ class App extends React.Component {
       list: [
         ...prevState.list,
         {
+          id: prevState.id + 1,
           first: this.state.first,
           last: this.state.last,
           activity: this.state.selection,
@@ -75,16 +84,22 @@ class App extends React.Component {
       ]
     }));
   }
-  delCourse(event) {}
+  delCourse(props) {
+    let newList = this.state.list.filter(item => item.id !== props);
+    this.setState({ list: newList });
+  }
   render() {
     let resultTable = this.state.list.map((item, index) => {
       return (
         <ResultTable
+          index={index}
+          id={item.id}
           key={index}
           first={item.first}
           last={item.last}
           activity={item.activity}
           restrictions={item.restrictions}
+          delCourse={this.delCourse}
         />
       );
     });
@@ -170,9 +185,7 @@ class App extends React.Component {
         <Button color="danger" value="submit" onClick={this.addCourse}>
           Submit
         </Button>
-        <table>
-          <tbody>{resultTable}</tbody>
-        </table>
+        {resultTable}
       </Container>
     );
   }
