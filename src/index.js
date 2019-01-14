@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./login.js";
 import Register from "./register.js";
-
+import "bootstrap/dist/css/bootstrap.css";
+import { Button, Input } from "reactstrap";
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +35,7 @@ class Login extends React.Component {
       alert("incorret password");
     if (this.state.list[usernameInput].password === passwordInput)
       this.setState({ login: true });
-    alert("incorret password");
+    else alert("incorret password");
   }
   handleRegis(event) {
     this.setState({ register: true });
@@ -61,21 +62,25 @@ class Login extends React.Component {
       return <Register submitRegister={this.submitRegister} />;
     return (
       <div>
-        <div>Username: </div>
-        <input
+        <div>Username:</div>
+        <Input
           type="text"
+          placeholder="Username"
           value={this.state.username}
           onChange={this.usernameChange}
         />
-        <div>Password: </div>
-        <input
-          type="text"
+        <div>Password:</div>
+        <Input
+          type="password"
+          placeholder="password"
           value={this.state.password}
           onChange={this.passwordChange}
         />
         <br />
-        <button onClick={this.handleLogin}>submit</button>
-        <button onClick={this.handleRegis}>register</button>
+        <Button onClick={this.handleLogin}>sign in</Button>
+        <Button className="register_button" onClick={this.handleRegis}>
+          register
+        </Button>
       </div>
     );
   }
