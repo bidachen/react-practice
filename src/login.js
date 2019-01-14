@@ -6,7 +6,6 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
   CustomInput,
   ListGroup,
   ListGroupItem
