@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { Button, Input } from "reactstrap";
+import "bootstrap/dist/css/bootstrap.css";
 
 class Register extends React.Component {
   constructor(props) {
@@ -25,33 +26,37 @@ class Register extends React.Component {
       password: this.state.password,
       email: this.state.email
     };
-    this.props.submitRegister(list);
+    if (this.state.username && this.state.password && this.state.email)
+      this.props.submitRegister(list);
+    else alert("Incorrect format!");
   }
 
   render() {
     return (
       <div>
         <div>Username: </div>
-        <input
+        <Input
           type="text"
+          placeholder="Username"
           value={this.state.username}
           onChange={this.usernameChange}
         />
         <div>Password: </div>
-        <input
+        <Input
           type="text"
+          placeholder="Password"
           value={this.state.password}
           onChange={this.passwordChange}
         />
-        <br />
         <div>Email: </div>
-        <input
-          type="text"
+        <Input
+          type="email"
+          placeholder="Email"
           value={this.state.email}
           onChange={this.emailChange}
         />
         <br />
-        <button onClick={this.submitRegister}>submit</button>
+        <Button onClick={this.submitRegister}>register</Button>
       </div>
     );
   }
